@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  clerkId       String        @id @unique
+  id            String        @id @default(cuid())
+  clerkId       String        @unique
   email         String        @unique
   username      String        @unique
   photo         String
   firstName     String?
   lastName      String?
-  planId        Int           @default(1)
-  creditBalance Int           @default(10)
+  planId        Int?          @default(1)
+  creditBalance Int?          @default(10)
   Image         Image[]
   Transaction   Transaction[]
 }
@@ -37,17 +38,18 @@ model Image {
   color              String?
   prompt             String?
   authorId           String?
-  author             User?    @relation(fields: [authorId], references: [clerkId])
+  author             User?    @relation(fields: [authorId], references: [id])
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
 
 model Transaction {
-  stripeId  String   @id @unique
+  id        String   @id @default(cuid())
+  stripeId  String   @unique
   amount    Int
   plan      String?
   credits   Int?
   buyerId   String?
-  buyer     User?    @relation(fields: [buyerId], references: [clerkId])
+  buyer     User?    @relation(fields: [buyerId], references: [id])
   createdAt DateTime @default(now())
 }
