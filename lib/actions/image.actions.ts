@@ -175,3 +175,57 @@ export async function getAllImages({
     handleError(error);
   }
 }
+
+// GET IMAGES
+export async function getUserImages({
+  limit = 9,
+  page = 1,
+  userId,
+}: {
+  limit?: number;
+  page: number;
+  userId: string;
+}) {
+  try {
+    cloudinary.config({
+      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+      secure: true,
+    });
+
+    let expression = "folder=imagine";
+
+    const { resources } = await cloudinary.search
+      .expression(expression)
+      .execute();
+
+    const resourceIds = resources.map((resource: any) => resource.public_id);
+
+    const skipAmount = (Number(page) - 1) * limit;
+
+    const images = await db.image.findMany({
+      where: {
+        authorId: userId,
+      },
+      skip: skipAmount,
+      orderBy: {
+        updatedAt: "desc",
+      },
+      take: limit,
+      include: {
+        author: true,
+      },
+    });
+
+    const totalImages = resources.length;
+    const savedImages = images.length;
+    return {
+      data: JSON.parse(JSON.stringify(images)),
+      totalPage: Math.ceil(totalImages / limit),
+      savedImages,
+    };
+  } catch (error) {
+    handleError(error);
+  }
+}
