@@ -33,7 +33,7 @@ model Image {
   width              Int?
   height             Int?
   config             String?
-  transformationUrl  String?
+  transformationURL  String?
   aspectRatio        String?
   color              String?
   prompt             String?
