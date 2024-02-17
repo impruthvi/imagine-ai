@@ -28,6 +28,8 @@ import { updateCredits } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 import MediaUploader from "./MediaUploader";
 import TransformedImage from "./TransformedImage";
+import { getCldImageUrl } from "next-cloudinary";
+import { addImage, updateImage } from "@/lib/actions/image.actions";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -75,10 +77,45 @@ const TransformationForm = ({
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
+    console.log("values", values);
 
     if (data || image) {
+      const transformationUrl = getCldImageUrl({
+        width: image?.width,
+        height: image?.height,
+        src: image?.publicId,
+        ...transformationConfig,
+      });
+
+      const imageData = {
+        title: values.title,
+        publicId: image?.publicId,
+        transformationType: type,
+        width: image?.width,
+        height: image?.height,
+        config: transformationConfig,
+        secureURL: image?.secureURL,
+        transformationUrl: transformationUrl,
+        aspectRatio: values.aspectRatio,
+        prompt: values.prompt,
+        color: values.color,
+      };
+
       if (action === "Add") {
         try {
+          console.log(userId);
+          
+          const newImage = await addImage({
+            image: imageData,
+            userId,
+            path: "/",
+          });
+
+          if (newImage) {
+            form.reset();
+            setImage(data);
+            router.push(`/transformations/${newImage.id}`);
+          }
         } catch (error) {
           console.log(error);
         }
@@ -86,6 +123,18 @@ const TransformationForm = ({
 
       if (action === "Update") {
         try {
+          const updatedImage = await updateImage({
+            image: {
+              ...imageData,
+              id: data.id,
+            },
+            userId,
+            path: `/transformations/${data.id}`,
+          });
+
+          if (updatedImage) {
+            router.push(`/transformations/${updatedImage.id}`);
+          }
         } catch (error) {
           console.log(error);
         }
