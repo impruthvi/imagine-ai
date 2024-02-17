@@ -25,6 +25,7 @@ const TransformedImage = ({
         width: image?.width,
         height: image?.height,
         src: image?.publicId,
+        ...JSON.parse(image.config?.toString() || "{}"),
         ...transformationConfig,
       }),
       title
@@ -59,6 +60,7 @@ const TransformedImage = ({
             sizes={"(max-width: 767px) 100vw, 50vw"}
             placeholder={dataUrl as PlaceholderValue}
             className="transformed-image"
+            {...JSON.parse(image.config?.toString() || "{}")}
             onLoad={() => {
               setIsTransforming && setIsTransforming(false);
             }}
