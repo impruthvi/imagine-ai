@@ -81,7 +81,7 @@ const TransformationForm = ({
     console.log("values", values);
 
     if (data || image) {
-      const transformationUrl = getCldImageUrl({
+      const transformationURL = getCldImageUrl({
         width: image?.width,
         height: image?.height,
         src: image?.publicId,
@@ -96,7 +96,7 @@ const TransformationForm = ({
         height: image?.height,
         config: transformationConfig as String,
         secureURL: image?.secureURL,
-        transformationUrl: transformationUrl,
+        transformationURL: transformationURL,
         aspectRatio: values.aspectRatio,
         prompt: values.prompt,
         color: values.color,
