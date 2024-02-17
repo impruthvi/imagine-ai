@@ -73,7 +73,7 @@ export const deleteUser = async (clerkId: string) => {
 };
 
 // USE CREDITS
-export const useCredits = async (clerkId: string, credits: number) => {
+export const updateCredits = async (clerkId: string, credits: number) => {
   try {
     const user = await db.user.findUnique({
       where: {
