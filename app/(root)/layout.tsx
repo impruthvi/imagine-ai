@@ -1,12 +1,12 @@
+import Sidebar from "@/components/shared/Sidebar";
 import React from "react";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="root">
-      <div className="root">
-        <div className="root-container">
-          <div className="wrapper">{children}</div>
-        </div>
+      <Sidebar />
+      <div className="root-container">
+        <div className="wrapper">{children}</div>
       </div>
     </main>
   );
