@@ -141,7 +141,19 @@ export async function getAllImages({
     const skipAmount = (Number(page) - 1) * limit;
 
     const images = await db.image.findMany({
-      where: query,
+      where: {
+        OR: [
+          {
+            title: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+          },
+          {
+            ...query,
+          },
+        ],
+      },
       skip: skipAmount,
       orderBy: {
         updatedAt: "desc",
