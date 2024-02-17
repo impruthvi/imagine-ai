@@ -47,7 +47,7 @@ model Transaction {
   amount    Int
   plan      String?
   credits   Int?
-  buyerId   String
+  buyerId   String?
   buyer     User?    @relation(fields: [buyerId], references: [clerkId])
   createdAt DateTime @default(now())
 }
