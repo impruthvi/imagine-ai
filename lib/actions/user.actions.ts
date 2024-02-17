@@ -2,10 +2,9 @@
 
 import { db } from "@/lib/db";
 import { handleError } from "../utils";
-import { User } from "@prisma/client";
 
 // CREATE
-export const createUser = async (user: User) => {
+export const createUser = async (user: CreateUserParams) => {
   try {
     const newUser = await db.user.create({ data: user });
 
@@ -33,7 +32,7 @@ export const getUserById = async (clerkId: string) => {
 };
 
 // UPDATE
-export const updateUser = async (clerkId: string, user: User) => {
+export const updateUser = async (clerkId: string, user: UpdateUserParams) => {
   try {
     const updatedUser = await db.user.update({
       where: {
